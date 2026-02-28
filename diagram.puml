@@ -1,0 +1,599 @@
+@startuml SmartHomeDevicesSystem
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam ArrowColor #444444
+skinparam ClassBorderColor #444444
+
+skinparam class {
+    BackgroundColor White
+    HeaderBackgroundColor #DDEEFF
+}
+
+' ─────────────────────────────────────────
+'  INTERFACES
+' ─────────────────────────────────────────
+
+interface SmartComponent {
+    + turnOn() : void
+    + turnOff() : void
+    + getName() : string
+    + getId() : string
+    + getStatus() : DeviceStatus
+}
+
+interface SmartDeviceFactory {
+    + createLight(type : string) : AbstractSmartLight*
+    + createThermostat(type : string) : AbstractSmartThermostat*
+    + createCamera(type : string) : AbstractSmartCamera*
+    + createDoorLock() : AbstractDoorLock*
+    + createMotionSensor() : AbstractMotionSen*
+}
+
+interface AbstractSmartLight {
+    + turnOn() : void
+    + turnOff() : void
+    + adjustbrightness(level : int) : bool
+    + getType() : string
+    + getId() : string
+    + getName() : string
+    + getStatus() : DeviceStatus
+}
+
+interface AbstractSmartThermostat {
+    + setTargetTemperature(temp : double) : void
+    + getTargetTemperature() : double
+    + getCurrentTemperature() : double
+    + setMode(mode : ThermoMode) : void
+    + getMode() : ThermoMode
+    + turnOn() : void
+    + turnOff() : void
+}
+
+interface AbstractSmartCamera {
+    + startRecording() : void
+    + stopRecording() : void
+    + enableNightVision() : void
+    + disableNightVision() : void
+    + isRecording() : bool
+    + turnOn() : void
+    + turnOff() : void
+}
+
+interface AbstractDoorLock {
+    + lock() : void
+    + unlock() : void
+    + isLocked() : bool
+}
+
+interface AbstractMotionSen {
+    + detectMotion() : bool
+    + setSensitivity(level : int) : void
+    + getSensitivity() : int
+}
+
+interface Observer {
+    + update(device : SmartDevice*) : void
+}
+
+interface Subject {
+    + attach(o : Observer*) : void
+    + detach(o : Observer*) : void
+    + notify() : void
+}
+
+interface Command {
+    + execute() : void
+    + undo() : void
+}
+
+interface AutomationModeStrategy {
+    + applyMode(hub : SmartHomeHub*) : void
+    + getModeName() : string
+}
+
+interface DeviceState {
+    + turnOn(device : SmartDevice*) : void
+    + turnOff(device : SmartDevice*) : void
+    + dim(device : SmartDevice*, level : int) : void
+    + getStateName() : string
+}
+
+' ─────────────────────────────────────────
+'  CORE CLASSES
+' ─────────────────────────────────────────
+
+class Client {
+    - hub : SmartHomeHub*
+    - controller : AutomationController*
+    + Client()
+    + ~Client()
+    + setupSystem() : void
+    + run() : void
+}
+
+class SmartHomeHub {
+    - devices : vector<SmartDevice*>
+    - devicesByZone : map<string, vector<SmartDevice*>>
+    - factory : SmartDeviceFactory*
+    - currentMode : AutomationModeStrategy*
+    + SmartHomeHub(factory : SmartDeviceFactory*)
+    + ~SmartHomeHub()
+    + addDevice(type : string, zone : string) : SmartDevice*
+    + removeDevice(deviceId : string) : void
+    + controlDevice(deviceId : string, action : string) : void
+    + executeAutomation(command : Command*) : void
+    + setMode(mode : AutomationModeStrategy*) : void
+    + getDevicesByZone(zone : string) : vector<SmartDevice*>
+    + getAllDevices() : vector<SmartDevice*>&
+}
+
+class SmartDevice {
+    - id : string
+    - name : string
+    - brand : string
+    - status : DeviceStatus
+    - location : string
+    - observers : list<Observer*>
+    - currentState : DeviceState*
+    + SmartDevice(id, name, brand : string)
+    + ~SmartDevice()
+    + turnOn() : void
+    + turnOff() : void
+    + dim(level : int) : void
+    + getId() : string
+    + getName() : string
+    + getBrand() : string
+    + getStatus() : DeviceStatus
+    + setLocation(loc : string) : void
+    + getLocation() : string
+    + attach(o : Observer*) : void
+    + detach(o : Observer*) : void
+    + notify() : void
+    + setState(state : DeviceState*) : void
+    + getCurrentState() : DeviceState*
+}
+
+' ─────────────────────────────────────────
+'  COMPOSITE PATTERN
+' ─────────────────────────────────────────
+
+class DeviceComposite {
+    - groupId : string
+    - groupName : string
+    - groupType : string
+    - children : vector<SmartComponent*>
+    + DeviceComposite(id, name, type : string)
+    + ~DeviceComposite()
+    + add(component : SmartComponent*) : void
+    + rem(component : SmartComponent*) : void
+    + getChildren() : vector<SmartComponent*>
+    + turnOn() : void
+    + turnOff() : void
+    + getName() : string
+    + getId() : string
+    + getStatus() : DeviceStatus
+}
+
+class RoomComposite {
+    - roomType : string
+    + RoomComposite(id, name, roomType : string)
+    + getRoomType() : string
+}
+
+class FloorComposite {
+    - floorNumber : int
+    + FloorComposite(id, name : string, floorNumber : int)
+    + getFloorNumber() : int
+}
+
+class FunctionalComposite {
+    - functionType : string
+    + FunctionalComposite(id, name, functionType : string)
+    + getFunctionType() : string
+}
+
+' ─────────────────────────────────────────
+'  ABSTRACT FACTORY PATTERN
+' ─────────────────────────────────────────
+
+class BasicFactory {
+    + createLight(type : string) : AbstractSmartLight*
+    + createThermostat(type : string) : AbstractSmartThermostat*
+    + createCamera(type : string) : AbstractSmartCamera*
+    + createDoorLock() : AbstractDoorLock*
+    + createMotionSensor() : AbstractMotionSen*
+}
+
+class PremiumFactory {
+    + createLight(type : string) : AbstractSmartLight*
+    + createThermostat(type : string) : AbstractSmartThermostat*
+    + createCamera(type : string) : AbstractSmartCamera*
+    + createDoorLock() : AbstractDoorLock*
+    + createMotionSensor() : AbstractMotionSen*
+}
+
+' ── Lights ──
+class BasicLedLight {
+    - id : string
+    - name : string
+    - brand : string
+    - status : DeviceStatus
+    + turnOn() : void
+    + turnOff() : void
+    + adjustbrightness(level : int) : bool
+    + getType() : string
+    + getId() : string
+    + getName() : string
+    + getStatus() : DeviceStatus
+}
+
+class BasicHalLight {
+    - id : string
+    - name : string
+    - brand : string
+    - status : DeviceStatus
+    + turnOn() : void
+    + turnOff() : void
+    + adjustbrightness(level : int) : bool
+    + getType() : string
+    + getId() : string
+    + getName() : string
+    + getStatus() : DeviceStatus
+}
+
+class PremiumLedLight {
+    - id : string
+    - name : string
+    - brand : string
+    - brightness : int
+    - state : LightState
+    + turnOn() : void
+    + turnOff() : void
+    + adjustbrightness(level : int) : bool
+    + setBrightness(level : int) : void
+    + getBrightness() : int
+    + getLightState() : LightState
+    + getType() : string
+    + getId() : string
+    + getName() : string
+    + getStatus() : DeviceStatus
+}
+
+class PremiumHalogenLight {
+    - id : string
+    - name : string
+    - brand : string
+    - brightness : int
+    - state : LightState
+    + turnOn() : void
+    + turnOff() : void
+    + adjustbrightness(level : int) : bool
+    + getType() : string
+    + getId() : string
+    + getName() : string
+    + getStatus() : DeviceStatus
+}
+
+' ── Thermostats ──
+class BasicSmartThermoA {
+    - id : string
+    - name : string
+    - brand : string
+    - targetTemperature : double
+    + setTargetTemperature(temp : double) : void
+    + getTargetTemperature() : double
+    + getCurrentTemperature() : double
+    + setMode(mode : ThermoMode) : void
+    + getMode() : ThermoMode
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class BasicSmartThermoB {
+    - id : string
+    - name : string
+    - brand : string
+    + setTargetTemperature(temp : double) : void
+    + getTargetTemperature() : double
+    + getCurrentTemperature() : double
+    + setMode(mode : ThermoMode) : void
+    + getMode() : ThermoMode
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class PremiumSmartThermoA {
+    - id : string
+    - name : string
+    - brand : string
+    - currentTemperature : double
+    - targetTemperature : double
+    - mode : ThermoMode
+    + setTargetTemperature(temp : double) : void
+    + getTargetTemperature() : double
+    + getCurrentTemperature() : double
+    + setMode(mode : ThermoMode) : void
+    + getMode() : ThermoMode
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class PremiumSmartThermoB {
+    - id : string
+    - name : string
+    - brand : string
+    - currentTemperature : double
+    - targetTemperature : double
+    - mode : ThermoMode
+    + setTargetTemperature(temp : double) : void
+    + getTargetTemperature() : double
+    + getCurrentTemperature() : double
+    + setMode(mode : ThermoMode) : void
+    + getMode() : ThermoMode
+    + turnOn() : void
+    + turnOff() : void
+}
+
+' ── Cameras ──
+class BasicWiredCamera {
+    - id : string
+    - name : string
+    - brand : string
+    - recording : bool
+    + startRecording() : void
+    + stopRecording() : void
+    + enableNightVision() : void
+    + disableNightVision() : void
+    + isRecording() : bool
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class BasicWirelessCamera {
+    - id : string
+    - name : string
+    - brand : string
+    - recording : bool
+    + startRecording() : void
+    + stopRecording() : void
+    + enableNightVision() : void
+    + disableNightVision() : void
+    + isRecording() : bool
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class PremiumWiredCamera {
+    - id : string
+    - name : string
+    - brand : string
+    - recording : bool
+    - nightVisionEnabled : bool
+    + startRecording() : void
+    + stopRecording() : void
+    + enableNightVision() : void
+    + disableNightVision() : void
+    + isRecording() : bool
+    + turnOn() : void
+    + turnOff() : void
+}
+
+class PremiumWirelessCamera {
+    - id : string
+    - name : string
+    - brand : string
+    - recording : bool
+    - nightVisionEnabled : bool
+    + startRecording() : void
+    + stopRecording() : void
+    + enableNightVision() : void
+    + disableNightVision() : void
+    + isRecording() : bool
+    + turnOn() : void
+    + turnOff() : void
+}
+
+' ─────────────────────────────────────────
+'  ADAPTER PATTERN
+' ─────────────────────────────────────────
+
+class LegacyDevice {
+    - externalId : string
+    - vendorName : string
+    - protocolType : string
+    - isConnected : bool
+    - rawState : string
+    + LegacyDevice(externalId, vendorName, protocolType : string)
+    + connect() : void
+    + disconnect() : void
+    + sendCommand(cmd : string) : void
+    + getStatus() : string
+}
+
+class LegacyDeviceAdapter {
+    - externalDevice : LegacyDevice*
+    - adapterVersion : string
+    - protocolSynced : bool
+    + LegacyDeviceAdapter(id, name : string, device : LegacyDevice*, version : string)
+    + ~LegacyDeviceAdapter()
+    + turnOn() : void
+    + turnOff() : void
+    + getStatus() : DeviceStatus
+    + control() : void
+    - translateCommand(cmd : string) : string
+}
+
+' ─────────────────────────────────────────
+'  OBSERVER PATTERN
+' ─────────────────────────────────────────
+
+class AutomationController {
+    - monitoredDevices : list<SmartDevice*>
+    - historyCommands : vector<Command*>
+    + AutomationController()
+    + ~AutomationController()
+    + update(device : SmartDevice*) : void
+    + addCommand(cmd : Command*) : void
+    + executeCommand(cmd : Command*) : void
+}
+
+' ─────────────────────────────────────────
+'  COMMAND PATTERN
+' ─────────────────────────────────────────
+
+class TurnLightONComm {
+    - device : SmartDevice*
+    + TurnLightONComm(dev : SmartDevice*)
+    + execute() : void
+    + undo() : void
+}
+
+class TurnLightOFFComm {
+    - device : SmartDevice*
+    + TurnLightOFFComm(dev : SmartDevice*)
+    + execute() : void
+    + undo() : void
+}
+
+' ─────────────────────────────────────────
+'  STRATEGY PATTERN
+' ─────────────────────────────────────────
+
+class ComfortAutomationMode {
+    - temperatureLevel : int
+    - brightnessLevel : int
+    + ComfortAutomationMode(temp : int, brightness : int)
+    + applyMode(hub : SmartHomeHub*) : void
+    + getModeName() : string
+}
+
+class EnergySavingMode {
+    - maxAllowedDevices : int
+    - autoShutdownDelay : int
+    + EnergySavingMode(maxDevices : int, shutdownDelay : int)
+    + applyMode(hub : SmartHomeHub*) : void
+    + getModeName() : string
+}
+
+' ─────────────────────────────────────────
+'  STATE PATTERN
+' ─────────────────────────────────────────
+
+class LightOnState {
+    - brightnessLevel : int
+    + LightOnState(brightness : int)
+    + turnOn(device : SmartDevice*) : void
+    + turnOff(device : SmartDevice*) : void
+    + dim(device : SmartDevice*, level : int) : void
+    + getStateName() : string
+}
+
+class LightOffState {
+    + turnOn(device : SmartDevice*) : void
+    + turnOff(device : SmartDevice*) : void
+    + dim(device : SmartDevice*, level : int) : void
+    + getStateName() : string
+}
+
+class LightDimmedState {
+    - brightnessLevel : int
+    + LightDimmedState(brightness : int)
+    + turnOn(device : SmartDevice*) : void
+    + turnOff(device : SmartDevice*) : void
+    + dim(device : SmartDevice*, level : int) : void
+    + getStateName() : string
+}
+
+' ─────────────────────────────────────────
+'  INHERITANCE
+' ─────────────────────────────────────────
+
+SmartComponent          <|.. SmartDevice
+SmartComponent          <|.. DeviceComposite
+DeviceComposite         <|-- RoomComposite
+DeviceComposite         <|-- FloorComposite
+DeviceComposite         <|-- FunctionalComposite
+
+SmartDeviceFactory      <|.. BasicFactory
+SmartDeviceFactory      <|.. PremiumFactory
+
+AbstractSmartLight      <|.. BasicLedLight
+AbstractSmartLight      <|.. BasicHalLight
+AbstractSmartLight      <|.. PremiumLedLight
+AbstractSmartLight      <|.. PremiumHalogenLight
+
+AbstractSmartThermostat <|.. BasicSmartThermoA
+AbstractSmartThermostat <|.. BasicSmartThermoB
+AbstractSmartThermostat <|.. PremiumSmartThermoA
+AbstractSmartThermostat <|.. PremiumSmartThermoB
+
+AbstractSmartCamera     <|.. BasicWiredCamera
+AbstractSmartCamera     <|.. BasicWirelessCamera
+AbstractSmartCamera     <|.. PremiumWiredCamera
+AbstractSmartCamera     <|.. PremiumWirelessCamera
+
+Subject                 <|.. SmartDevice
+Observer                <|.. AutomationController
+
+Command                 <|.. TurnLightONComm
+Command                 <|.. TurnLightOFFComm
+
+AutomationModeStrategy  <|.. ComfortAutomationMode
+AutomationModeStrategy  <|.. EnergySavingMode
+
+DeviceState             <|.. LightOnState
+DeviceState             <|.. LightOffState
+DeviceState             <|.. LightDimmedState
+
+SmartDevice             <|-- LegacyDeviceAdapter
+
+' ─────────────────────────────────────────
+'  COMPOSITION / AGGREGATION
+' ─────────────────────────────────────────
+
+Client                  "1" o-- "1"   SmartHomeHub          : uses
+Client                  "1" o-- "1"   AutomationController  : owns
+
+SmartHomeHub            "1" o-- "1"   SmartDeviceFactory    : uses
+SmartHomeHub            "1" o-- "0..*" SmartDevice          : manages
+SmartHomeHub            "1" o-- "0..1" AutomationModeStrategy : has
+
+DeviceComposite         "1" o-- "0..*" SmartComponent       : contains
+
+SmartDevice             "1" *-- "1"   DeviceState           : has state
+SmartDevice             "1" o-- "0..*" Observer             : notifies
+
+LegacyDeviceAdapter     "1" *-- "1"   LegacyDevice          : wraps
+
+AutomationController    "1" o-- "0..*" Command              : history
+
+' ─────────────────────────────────────────
+'  DEPENDENCIES
+' ─────────────────────────────────────────
+
+BasicFactory    ..> BasicLedLight
+BasicFactory    ..> BasicHalLight
+BasicFactory    ..> BasicSmartThermoA
+BasicFactory    ..> BasicSmartThermoB
+BasicFactory    ..> BasicWiredCamera
+BasicFactory    ..> BasicWirelessCamera
+
+PremiumFactory  ..> PremiumLedLight
+PremiumFactory  ..> PremiumHalogenLight
+PremiumFactory  ..> PremiumSmartThermoA
+PremiumFactory  ..> PremiumSmartThermoB
+PremiumFactory  ..> PremiumWiredCamera
+PremiumFactory  ..> PremiumWirelessCamera
+
+TurnLightONComm  ..> SmartDevice
+TurnLightOFFComm ..> SmartDevice
+
+ComfortAutomationMode ..> SmartHomeHub
+EnergySavingMode      ..> SmartHomeHub
+
+LightOnState    ..> SmartDevice
+LightOffState   ..> SmartDevice
+LightDimmedState ..> SmartDevice
+
+@enduml
