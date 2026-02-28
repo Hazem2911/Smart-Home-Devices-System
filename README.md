@@ -4,6 +4,12 @@ A C++17 simulation of a smart home ecosystem built entirely around **software de
 
 ---
 
+## UML Class Diagram
+
+![UML Class Diagram](SmartHomeDevicesSystem.svg)
+
+---
+
 ## Why Design Patterns?
 
 Smart home systems are inherently complex: they must support **multiple device tiers**, **dynamic behavior**, **event-driven automation**, and **extensibility** without breaking existing code. Design patterns provide proven, structured solutions to exactly these challenges.
