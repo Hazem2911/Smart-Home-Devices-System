@@ -6,7 +6,7 @@ A C++17 simulation of a smart home ecosystem built entirely around **software de
 
 ## UML Class Diagram
 
-![UML Class Diagram](SmartHomeDevicesSystem.svg)
+![UML Class Diagram](SmartHomeDevicesSystem.png)
 
 ---
 
