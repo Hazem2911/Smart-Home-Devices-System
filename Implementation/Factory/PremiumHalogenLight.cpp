@@ -20,7 +20,7 @@ bool PremiumHalogenLight::adjustbrightness(int level) {
     return true;
 }
 
-string  PremiumHalogenLight::getType()   { return "PremiumHalogenLight"; }
-string  PremiumHalogenLight::getId()     { return id; }
-string  PremiumHalogenLight::getName()   { return name; }
+string  PremiumHalogenLight::getType() { return "PremiumHalogenLight"; }
+string  PremiumHalogenLight::getId() { return id; }
+string  PremiumHalogenLight::getName() { return name; }
 DeviceStatus PremiumHalogenLight::getStatus() { return status; }

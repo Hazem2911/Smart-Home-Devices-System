@@ -13,7 +13,7 @@ SmartHomeHub::~SmartHomeHub() {
 
 SmartDevice* SmartHomeHub::addDevice(const string& type, const string& zone) {
     SmartDevice* device = nullptr;
-    // Use factory to create the device based on type
+    // Use factory to create the device based on type -> 
     device = new SmartDevice("dev-" + to_string(devices.size() + 1), type, "Generic");
     device->setLocation(zone);
     devices.push_back(device);

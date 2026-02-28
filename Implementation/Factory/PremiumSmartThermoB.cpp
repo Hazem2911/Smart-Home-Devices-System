@@ -11,15 +11,15 @@ void PremiumSmartThermoB::setTargetTemperature(double temp) {
     cout << "[PremiumSmartThermoB] Target temperature set to " << temp << endl;
 }
 
-double PremiumSmartThermoB::getTargetTemperature()  { return targetTemperature; }
-double PremiumSmartThermoB::getCurrentTemperature() { return currentTemperature; }
+double PremiumSmartThermoB::getTargetTemperature() {return targetTemperature;}
+double PremiumSmartThermoB::getCurrentTemperature() {return currentTemperature;}
 
 void PremiumSmartThermoB::setMode(ThermoMode m) {
     mode = m;
     cout << "[PremiumSmartThermoB] Mode set to " << (int)m << endl;
 }
 
-ThermoMode PremiumSmartThermoB::getMode() { return mode; }
+ThermoMode PremiumSmartThermoB::getMode(){return mode;}
 
 void PremiumSmartThermoB::turnOn() {
     status = DeviceStatus::ON;
@@ -31,6 +31,6 @@ void PremiumSmartThermoB::turnOff() {
     cout << "[PremiumSmartThermoB] " << name << " turned OFF" << endl;
 }
 
-string  PremiumSmartThermoB::getId()     { return id; }
-string  PremiumSmartThermoB::getName()   { return name; }
-DeviceStatus PremiumSmartThermoB::getStatus() { return status; }
+string  PremiumSmartThermoB::getId() { return id; }
+string  PremiumSmartThermoB::getName() {return name;}
+DeviceStatus PremiumSmartThermoB::getStatus() {return status;}

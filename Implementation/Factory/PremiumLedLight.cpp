@@ -24,13 +24,13 @@ bool PremiumLedLight::adjustbrightness(int level) {
 
 string PremiumLedLight::getType()  { return "PremiumLedLight"; }
 
-void PremiumLedLight::setBrightness(int level) { brightness = level; }
-int  PremiumLedLight::getBrightness()          { return brightness;  }
-LightState PremiumLedLight::getLightState()    { return state;        }
+void PremiumLedLight::setBrightness(int level) { brightness = level;}
+int  PremiumLedLight::getBrightness() { return brightness;}
+LightState PremiumLedLight::getLightState() { return state;}
 
-string  PremiumLedLight::getId()     { return id;    }
-string  PremiumLedLight::getName()   { return name;  }
-string  PremiumLedLight::getBrand()  { return brand; }
+string  PremiumLedLight::getId() { return id;}
+string  PremiumLedLight::getName() { return name;}
+string  PremiumLedLight::getBrand() { return brand;}
 
 DeviceStatus PremiumLedLight::getStatus() {
     return (state == LightState::OFF) ? DeviceStatus::OFF : DeviceStatus::ON;

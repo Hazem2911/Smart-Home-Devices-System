@@ -38,6 +38,6 @@ void BasicWirelessCamera::turnOff() {
     cout << "[BasicWirelessCamera] " << name << " turned OFF" << endl;
 }
 
-string  BasicWirelessCamera::getId()     { return id; }
-string  BasicWirelessCamera::getName()   { return name; }
+string  BasicWirelessCamera::getId() { return id; }
+string  BasicWirelessCamera::getName() { return name; }
 DeviceStatus BasicWirelessCamera::getStatus() { return status; }

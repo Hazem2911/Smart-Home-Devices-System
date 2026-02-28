@@ -20,7 +20,7 @@ bool BasicLedLight::adjustbrightness(int level) {
     return true;
 }
 
-string  BasicLedLight::getType()   { return "BasicLedLight"; }
-string  BasicLedLight::getId()     { return id; }
-string  BasicLedLight::getName()   { return name; }
+string  BasicLedLight::getType() { return "BasicLedLight"; }
+string  BasicLedLight::getId() { return id; }
+string  BasicLedLight::getName() { return name; }
 DeviceStatus BasicLedLight::getStatus() { return status; }

@@ -31,6 +31,6 @@ void BasicSmartThermoA::turnOff() {
     cout << "[BasicSmartThermoA] " << name << " turned OFF" << endl;
 }
 
-string  BasicSmartThermoA::getId()     { return id; }
-string  BasicSmartThermoA::getName()   { return name; }
+string  BasicSmartThermoA::getId() { return id; }
+string  BasicSmartThermoA::getName() { return name; }
 DeviceStatus BasicSmartThermoA::getStatus() { return status; }

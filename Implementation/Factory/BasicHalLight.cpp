@@ -20,7 +20,7 @@ bool BasicHalLight::adjustbrightness(int level) {
     return true;
 }
 
-string  BasicHalLight::getType()   { return "BasicHalLight"; }
-string  BasicHalLight::getId()     { return id; }
-string  BasicHalLight::getName()   { return name; }
+string  BasicHalLight::getType() { return "BasicHalLight"; }
+string  BasicHalLight::getId() { return id; }
+string  BasicHalLight::getName() { return name; }
 DeviceStatus BasicHalLight::getStatus() { return status; }

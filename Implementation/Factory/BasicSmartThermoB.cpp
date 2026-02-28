@@ -11,7 +11,7 @@ void BasicSmartThermoB::setTargetTemperature(double temp) {
     cout << "[BasicSmartThermoB] Target temperature set to " << temp << endl;
 }
 
-double BasicSmartThermoB::getTargetTemperature()  { return targetTemperature; }
+double BasicSmartThermoB::getTargetTemperature() { return targetTemperature; }
 double BasicSmartThermoB::getCurrentTemperature() { return currentTemperature; }
 
 void BasicSmartThermoB::setMode(ThermoMode m) {
@@ -31,6 +31,6 @@ void BasicSmartThermoB::turnOff() {
     cout << "[BasicSmartThermoB] " << name << " turned OFF" << endl;
 }
 
-string  BasicSmartThermoB::getId()     { return id; }
-string  BasicSmartThermoB::getName()   { return name; }
+string  BasicSmartThermoB::getId() { return id; }
+string  BasicSmartThermoB::getName() { return name; }
 DeviceStatus BasicSmartThermoB::getStatus() { return status; }

@@ -25,7 +25,7 @@ void PremiumWiredCamera::disableNightVision() {
     cout << "[PremiumWiredCamera] Night vision disabled" << endl;
 }
 
-bool PremiumWiredCamera::isRecording() { return recording; }
+bool PremiumWiredCamera::isRecording() {return recording;}
 
 void PremiumWiredCamera::turnOn() {
     status = DeviceStatus::ON;
@@ -38,6 +38,6 @@ void PremiumWiredCamera::turnOff() {
     cout << "[PremiumWiredCamera] " << name << " turned OFF" << endl;
 }
 
-string  PremiumWiredCamera::getId()     { return id; }
-string  PremiumWiredCamera::getName()   { return name; }
-DeviceStatus PremiumWiredCamera::getStatus() { return status; }
+string  PremiumWiredCamera::getId() {return id;}
+string  PremiumWiredCamera::getName() {return name;}
+DeviceStatus PremiumWiredCamera::getStatus() {return status;}
