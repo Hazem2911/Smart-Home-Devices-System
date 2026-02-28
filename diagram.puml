@@ -2,12 +2,30 @@
 
 skinparam classAttributeIconSize 0
 skinparam classFontStyle bold
-skinparam ArrowColor #444444
-skinparam ClassBorderColor #444444
+skinparam backgroundColor #1e1e2e
+skinparam ArrowColor #89b4fa
+skinparam ClassBorderColor #585b70
+skinparam ClassFontColor #cdd6f4
+skinparam ClassAttributeFontColor #cdd6f4
+skinparam ClassStereotypeFontColor #a6e3a1
+skinparam NoteFontColor #cdd6f4
+skinparam NoteBackgroundColor #313244
+skinparam NoteBorderColor #585b70
 
 skinparam class {
-    BackgroundColor White
-    HeaderBackgroundColor #DDEEFF
+    BackgroundColor #313244
+    HeaderBackgroundColor #45475a
+    FontColor #cdd6f4
+    AttributeFontColor #cdd6f4
+    BorderColor #585b70
+}
+
+skinparam interface {
+    BackgroundColor #1e3a5f
+    HeaderBackgroundColor #1d4ed8
+    FontColor #bfdbfe
+    AttributeFontColor #bfdbfe
+    BorderColor #3b82f6
 }
 
 ' ─────────────────────────────────────────
